@@ -14,7 +14,7 @@ def get_distribution(Kd, conc):
 
     :return mono, dimer: concentrations of monomers and dimers
     """
-    mono = 0.25 * (np.sqrt(Kd**2 + 8 * Kd * conc) - Kd)
+    mono = 0.25 * (np.sqrt(Kd ** 2 + 8 * Kd * conc) - Kd)
     dimer = mono ** 2 / Kd
     return mono, dimer
 
@@ -25,8 +25,8 @@ def test_get_distribution():
     """
     for Kd, conc in [(0.001, 0.001), (0.001, 1000), (1, 1), (1000, 0.001), (1000, 1), (1000, 1000)]:
         mono, dimer = get_distribution(Kd, conc)
-        print mono**2 / dimer - Kd
-        assert abs(mono**2 / dimer - Kd) < 10**-10
+        print mono ** 2 / dimer - Kd
+        assert abs(mono ** 2 / dimer - Kd) < 10 ** -10
     print 'OK - all tests passed.'
 
 
@@ -39,10 +39,9 @@ def get_percentage(Kd, conc):
     :rtype: dict
     """
     mono_abs, dimer_abs = get_distribution(Kd, conc)
-    mono_ratio = mono_abs/conc
-    dimer_ratio = 2*dimer_abs/conc
+    mono_ratio = mono_abs / conc
+    dimer_ratio = 2 * dimer_abs / conc
     return {'mono': mono_ratio, 'dimer': dimer_ratio}
-
 
 
 def sliders():
@@ -56,7 +55,7 @@ def sliders():
     fig, ax = plt.subplots()
     plt.xscale('log')
 
-    mono,  = plt.plot(x, percentage['mono'], 'r-', label='monomer')
+    mono, = plt.plot(x, percentage['mono'], 'r-', label='monomer')
     dimer, = plt.plot(x, percentage['dimer'], 'g-', label='dimer')
     # plt.legend(loc='best')
 
@@ -71,7 +70,7 @@ def sliders():
     sconc = Slider(axconc, 'Conc.', conc_log - 3, conc_log + 3, valinit=conc_log)
 
     def set_number_format(number):
-        exp = 10**number
+        exp = 10 ** number
         if exp >= 10:
             return '%.1f nM' % exp
         else:
@@ -83,11 +82,10 @@ def sliders():
     def update(_):
         skd.valtext.set_text(set_number_format(skd.val))
         sconc.valtext.set_text(set_number_format(sconc.val))
-        kd = 10**skd.val
+        kd = 10 ** skd.val
         percentage = get_percentage(kd, x)
         mono.set_ydata(percentage['mono'])
         dimer.set_ydata(percentage['dimer'])
-
 
     skd.on_changed(update)
     sconc.on_changed(update)
@@ -141,7 +139,7 @@ def dilution_sliders(data, L_tot, fit_params):
 
     # noinspection PyUnresolvedReferences
     def update(_):
-        kd = 10**skd.val
+        kd = 10 ** skd.val
         skd.valtext.set_text('%.3f' % kd)
         mono_signal = smono.val
         dimer_signal = sdimer.val
@@ -150,6 +148,7 @@ def dilution_sliders(data, L_tot, fit_params):
         # r2_text.set_text('R^2 = %.4f' % r_squared(mean_signal, prediction))
         r2_text.set_text('chi^2 = %.4f' % get_reduced_chi(signal, errors, prediction))
         fig.canvas.draw_idle()
+
     skd.on_changed(update)
     smono.on_changed(update)
     sdimer.on_changed(update)
@@ -158,6 +157,7 @@ def dilution_sliders(data, L_tot, fit_params):
 
 def main():
     sliders()
+
 
 if __name__ == '__main__':
     main()
